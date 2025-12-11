@@ -1,15 +1,9 @@
-# hexa-rs
-
-![icon](./assets/hexa-rs-icon.png)
-
-DISCLAIMER: This image is AI generated. If you have design skills and want to contribute, a human
-created image is very much welcome.
+# soma
 
 ## Summary
 
-This template initializes a new Rust project following the hexagonal architecture principals,
-agnostic about what kind of application you want to develop. After the use of this template, be
-sure to address the `# TODO` that are left across the code base.
+A fast, easy-to-use, privacy-respecting, and fully open-source tracker for body weight and body
+composition.
 
 ## Local development
 
