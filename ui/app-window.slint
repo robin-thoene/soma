@@ -1,6 +1,8 @@
 import { Button, VerticalBox, GroupBox, LineEdit } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
+    callback submit(string, string, string);
+
     VerticalLayout {
         alignment: space-between;
         padding: 30px;
@@ -15,7 +17,7 @@ export component AppWindow inherits Window {
                     text: "Weight";
                 }
 
-                LineEdit {
+                weight_input := LineEdit {
                     horizontal-alignment: center;
                     font-size: 16px;
                     input-type: decimal;
@@ -29,7 +31,7 @@ export component AppWindow inherits Window {
                     text: "Body fat";
                 }
 
-                LineEdit {
+                body_fat_input := LineEdit {
                     horizontal-alignment: center;
                     font-size: 16px;
                     input-type: decimal;
@@ -42,7 +44,7 @@ export component AppWindow inherits Window {
                     text: "Muscle mass";
                 }
 
-                LineEdit {
+                muscle_mass_input := LineEdit {
                     horizontal-alignment: center;
                     font-size: 16px;
                     input-type: decimal;
@@ -53,6 +55,9 @@ export component AppWindow inherits Window {
         Button {
             text: "submit";
             height: 60px;
+            clicked => {
+                submit(weight_input.text,body_fat_input.text,muscle_mass_input.text);
+            }
         }
     }
 }
