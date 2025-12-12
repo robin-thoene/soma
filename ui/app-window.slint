@@ -1,18 +1,58 @@
-import { Button, VerticalBox } from "std-widgets.slint";
+import { Button, VerticalBox, GroupBox, LineEdit } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
-    in-out property <int> counter: 42;
-    callback request-increase-value();
-    VerticalBox {
-        Text {
-            text: "Counter: \{root.counter}";
+    VerticalLayout {
+        alignment: space-between;
+        padding: 30px;
+
+        VerticalLayout {
+            spacing: 30px;
+
+            VerticalLayout {
+                spacing: 10px;
+
+                Text {
+                    text: "Weight";
+                }
+
+                LineEdit {
+                    horizontal-alignment: center;
+                    font-size: 16px;
+                    input-type: decimal;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 10px;
+
+                Text {
+                    text: "Body fat";
+                }
+
+                LineEdit {
+                    horizontal-alignment: center;
+                    font-size: 16px;
+                    input-type: decimal;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 10px;
+                Text {
+                    text: "Muscle mass";
+                }
+
+                LineEdit {
+                    horizontal-alignment: center;
+                    font-size: 16px;
+                    input-type: decimal;
+                }
+            }
         }
 
         Button {
-            text: "Increase value";
-            clicked => {
-                root.request-increase-value();
-            }
+            text: "submit";
+            height: 60px;
         }
     }
 }
