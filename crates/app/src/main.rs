@@ -1,17 +1,8 @@
+use adapters::inbound::mobile_app::app::App;
 use std::error::Error;
 
-slint::include_modules!();
-
 fn main() -> Result<(), Box<dyn Error>> {
-    let ui = AppWindow::new()?;
-
-    ui.on_submit(move |weight, body_fat, muscle_mass| {
-        println!("{}", weight);
-        println!("{}", body_fat);
-        println!("{}", muscle_mass);
-    });
-
-    ui.run()?;
-
+    let app = App::default();
+    app.run()?;
     Ok(())
 }

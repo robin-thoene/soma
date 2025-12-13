@@ -1,6 +1,10 @@
 import { Button, VerticalBox, GroupBox, LineEdit } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
+    callback compute-weight-input(string) -> string;
+    callback compute-body-fat-input(string) -> string;
+    callback compute-muscle-mass-input(string) -> string;
+
     callback submit(string, string, string);
 
     VerticalLayout {
@@ -21,6 +25,10 @@ export component AppWindow inherits Window {
                     horizontal-alignment: center;
                     font-size: 16px;
                     input-type: decimal;
+                    changed text => {
+                        let res = compute-weight-input(self.text);
+                        self.text = res;
+                    }
                 }
             }
 
@@ -34,7 +42,10 @@ export component AppWindow inherits Window {
                 body_fat_input := LineEdit {
                     horizontal-alignment: center;
                     font-size: 16px;
-                    input-type: decimal;
+                    changed text => {
+                        let res = compute-body-fat-input(self.text);
+                        self.text = res;
+                    }
                 }
             }
 
@@ -48,6 +59,10 @@ export component AppWindow inherits Window {
                     horizontal-alignment: center;
                     font-size: 16px;
                     input-type: decimal;
+                    changed text => {
+                        let res = compute-muscle-mass-input(self.text);
+                        self.text = res;
+                    }
                 }
             }
         }

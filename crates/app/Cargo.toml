@@ -11,7 +11,4 @@ name = "soma"
 path = "src/main.rs"
 
 [dependencies]
-slint = "1.14.1"
-
-[build-dependencies]
-slint-build = "1.14.1"
+adapters = { path = "../adapters" }

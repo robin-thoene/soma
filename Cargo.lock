@@ -115,6 +115,8 @@ dependencies = [
  "application",
  "domain",
  "ports",
+ "slint",
+ "slint-build",
 ]
 
 [[package]]
@@ -4257,8 +4259,7 @@ dependencies = [
 name = "soma-bin"
 version = "0.0.0"
 dependencies = [
- "slint",
- "slint-build",
+ "adapters",
 ]
 
 [[package]]
