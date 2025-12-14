@@ -22,20 +22,25 @@ impl MeasurementPort for MeasurementRepository {
         muscle_mass_pct: Option<f32>,
     ) -> Result<(), String> {
         let timestamp = Utc::now();
-        println!("{:?}, {:?}, {:?}", weight_kg, body_fat_pct, muscle_mass_pct);
-
-        let result = sqlx::query(
+        let mut query = sqlx::query(
             r#"
                 INSERT INTO measurements ( utc_time, weight_kg, body_fat_pct, muscle_mass_pct )
                 VALUES ( ?1, ?2, ?3, ?4 )
             "#,
         )
         .bind(timestamp.to_rfc3339())
-        .bind(weight_kg)
-        .bind(body_fat_pct)
-        .bind(muscle_mass_pct)
-        .execute(&self.db_conn)
-        .await;
+        .bind(format!("{:.2}", weight_kg));
+        if let Some(x) = body_fat_pct {
+            query = query.bind(format!("{:.2}", x));
+        } else {
+            query = query.bind(body_fat_pct);
+        };
+        if let Some(x) = muscle_mass_pct {
+            query = query.bind(format!("{:.2}", x));
+        } else {
+            query = query.bind(muscle_mass_pct);
+        };
+        let result = query.execute(&self.db_conn).await;
         match result {
             Ok(_) => Ok(()),
             Err(err) => Err(err.to_string()), // TODO: better error handling
