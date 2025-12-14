@@ -22,9 +22,11 @@ impl MeasurementPort for MeasurementRepository {
         muscle_mass_pct: Option<f32>,
     ) -> Result<(), String> {
         let timestamp = Utc::now();
+        println!("{:?}, {:?}, {:?}", weight_kg, body_fat_pct, muscle_mass_pct);
+
         let result = sqlx::query(
             r#"
-                INSERT INTO todos ( measurements )
+                INSERT INTO measurements ( utc_time, weight_kg, body_fat_pct, muscle_mass_pct )
                 VALUES ( ?1, ?2, ?3, ?4 )
             "#,
         )
