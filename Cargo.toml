@@ -6,3 +6,7 @@ members = ["crates/*"]
 version = "0.0.0"
 authors = ["robin-thoene"]
 license = "MIT"
+
+[workspace.dependencies]
+slint = "1.14.1"
+sqlx = { version = "0.8.6", features = ["sqlite"] }
