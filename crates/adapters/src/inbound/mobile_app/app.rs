@@ -1,4 +1,6 @@
-use crate::inbound::mobile_app::user_input_sanitizer::sanitize_weight_input;
+use crate::inbound::mobile_app::user_input_sanitizer::{
+    sanitize_body_fat_input, sanitize_muscle_mass_input, sanitize_weight_input,
+};
 use slint::SharedString;
 use std::error::Error;
 
@@ -33,19 +35,11 @@ impl App {
         });
 
         ui.on_compute_body_fat_input(move |new_val: SharedString| {
-            if new_val.len() > 3 {
-                new_val[..3].into()
-            } else {
-                new_val
-            }
+            sanitize_body_fat_input(new_val.as_str()).into()
         });
 
         ui.on_compute_muscle_mass_input(move |new_val: SharedString| {
-            if new_val.len() > 3 {
-                new_val[..3].into()
-            } else {
-                new_val
-            }
+            sanitize_muscle_mass_input(new_val.as_str()).into()
         });
     }
 }
