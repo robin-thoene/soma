@@ -8,7 +8,9 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+async-trait = { workspace = true }
 application = { path = "../application" }
+chrono = { workspace = true }
 dirs = { workspace = true }
 domain = { path = "../domain" }
 ports = { path = "../ports" }

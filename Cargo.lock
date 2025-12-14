@@ -113,6 +113,8 @@ name = "adapters"
 version = "0.0.0"
 dependencies = [
  "application",
+ "async-trait",
+ "chrono",
  "dirs",
  "domain",
  "ports",
@@ -3803,6 +3805,7 @@ dependencies = [
 name = "ports"
 version = "0.0.0"
 dependencies = [
+ "async-trait",
  "domain",
 ]
 
