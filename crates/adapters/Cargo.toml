@@ -9,6 +9,7 @@ license.workspace = true
 
 [dependencies]
 application = { path = "../application" }
+dirs = { workspace = true }
 domain = { path = "../domain" }
 ports = { path = "../ports" }
 slint = { workspace = true }

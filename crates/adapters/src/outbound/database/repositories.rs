@@ -1,7 +1,16 @@
 use domain::models::Measurement;
 use ports::outbound::measurement_port::MeasurementPort;
+use sqlx::SqlitePool;
 
-pub struct MeasurementRepository {}
+pub struct MeasurementRepository {
+    _db_conn: SqlitePool,
+}
+
+impl MeasurementRepository {
+    pub fn new(db_conn: SqlitePool) -> Self {
+        Self { _db_conn: db_conn }
+    }
+}
 
 impl MeasurementPort for MeasurementRepository {
     fn create_measurement(
