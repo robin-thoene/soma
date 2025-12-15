@@ -24,11 +24,17 @@ impl MeasurementPort for MeasurementRepository {
         let timestamp = Utc::now();
         let result = sqlx::query(
             r#"
-                INSERT INTO measurements ( utc_time, weight_kg, body_fat_pct, muscle_mass_pct )
+                INSERT INTO measurements 
+                ( 
+                    utc_time_millis, 
+                    weight_kg, 
+                    body_fat_pct, 
+                    muscle_mass_pct 
+                )
                 VALUES ( ?1, ROUND(?2, 2), ROUND(?3, 2), ROUND(?4, 2) )
             "#,
         )
-        .bind(timestamp.to_rfc3339())
+        .bind(timestamp.timestamp_millis())
         .bind(weight_kg)
         .bind(body_fat_pct)
         .bind(muscle_mass_pct)
