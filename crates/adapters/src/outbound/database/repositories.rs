@@ -1,7 +1,10 @@
 use async_trait::async_trait;
 use chrono::Utc;
+use domain::models::Measurement;
 use ports::outbound::measurement_port::MeasurementPort;
 use sqlx::SqlitePool;
+
+use crate::outbound::database::daos::MeasurementDao;
 
 pub struct MeasurementRepository {
     db_conn: SqlitePool,
@@ -43,6 +46,25 @@ impl MeasurementPort for MeasurementRepository {
         match result {
             Ok(_) => Ok(()),
             Err(err) => Err(err.to_string()), // TODO: better error handling
+        }
+    }
+
+    async fn get_measurements(&self) -> Result<Vec<Measurement>, String> {
+        let result = sqlx::query_as::<_, MeasurementDao>(
+            r#"
+                SELECT *
+                FROM measurements
+                ORDER BY utc_time_millis DESC
+            "#,
+        )
+        .fetch_all(&self.db_conn)
+        .await;
+        match result {
+            Ok(result) => {
+                let result = result.iter().map(|x| x.into()).collect();
+                Ok(result)
+            }
+            Err(err) => Err(err.to_string()),
         }
     }
 }

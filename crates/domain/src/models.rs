@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 
+#[derive(Debug)]
 pub struct Measurement {
     id: i32,
     utc_time: DateTime<Utc>,

@@ -32,6 +32,7 @@ where
         body_fat_pct: Option<f32>,
         muscle_mass_pct: Option<f32>,
     ) -> Result<(), String> {
+        // TODO: add necessary business logic
         self.measurement_port
             .create_measurement(weight_kg, body_fat_pct, muscle_mass_pct)
             .await

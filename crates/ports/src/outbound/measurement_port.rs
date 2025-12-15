@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use domain::models::Measurement;
 
 #[async_trait]
 pub trait MeasurementPort: Send + Sync {
@@ -8,4 +9,6 @@ pub trait MeasurementPort: Send + Sync {
         body_fat_pct: Option<f32>,
         muscle_mass_pct: Option<f32>,
     ) -> Result<(), String>; // TODO: better error types/handling
+
+    async fn get_measurements(&self) -> Result<Vec<Measurement>, String>; // TODO: better error types/handling
 }

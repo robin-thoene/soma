@@ -17,7 +17,7 @@ where
     G: GetMeasurementsPort + 'static,
 {
     create_measurement_port: Arc<C>,
-    _get_measurements_port: Arc<G>,
+    get_measurements_port: Arc<G>,
 }
 
 impl<C, G> App<C, G>
@@ -28,7 +28,7 @@ where
     pub fn new(create_measurement_port: Arc<C>, get_measurements_port: Arc<G>) -> Self {
         Self {
             create_measurement_port,
-            _get_measurements_port: get_measurements_port,
+            get_measurements_port,
         }
     }
 
@@ -36,6 +36,12 @@ where
     pub fn run(&self) -> Result<(), Box<dyn Error>> {
         let ui = AppWindow::new()?;
         self.register_callbacks(&ui);
+        // TODO: remove debug code
+        let get_measurements_port = Arc::clone(&self.get_measurements_port);
+        let _ = slint::spawn_local(async move {
+            let tst = get_measurements_port.get().await;
+            println!("{:?}", tst);
+        });
         ui.run()?;
         Ok(())
     }
@@ -46,7 +52,7 @@ where
     ///
     /// * `ui` - The main application window
     fn register_callbacks(&self, ui: &AppWindow) {
-        let port = Arc::clone(&self.create_measurement_port);
+        let create_measurement_port = Arc::clone(&self.create_measurement_port);
 
         ui.on_submit(move |weight, body_fat, muscle_mass| {
             // TODO: replace with safe way of parsing
@@ -62,10 +68,12 @@ where
                 Some(muscle_mass.trim().parse::<f32>().unwrap())
             };
 
-            let port = Arc::clone(&port);
+            let create_measurement_port = Arc::clone(&create_measurement_port);
 
             let _ = slint::spawn_local(async move {
-                let _ = port.create(weight_kg, body_fat_pct, muscle_mass_pct).await;
+                let _ = create_measurement_port
+                    .create(weight_kg, body_fat_pct, muscle_mass_pct)
+                    .await;
             });
         });
 

@@ -10,7 +10,7 @@ pub struct GetMeasurementsUsecase<M>
 where
     M: MeasurementPort,
 {
-    _measurement_port: Arc<M>,
+    measurement_port: Arc<M>,
 }
 
 impl<M> GetMeasurementsUsecase<M>
@@ -18,9 +18,7 @@ where
     M: MeasurementPort,
 {
     pub fn new(measurement_port: Arc<M>) -> Self {
-        Self {
-            _measurement_port: measurement_port,
-        }
+        Self { measurement_port }
     }
 }
 
@@ -30,6 +28,7 @@ where
     M: MeasurementPort,
 {
     async fn get(&self) -> Result<Vec<Measurement>, String> {
-        Ok(vec![])
+        // TODO: add necessary business logic
+        self.measurement_port.get_measurements().await
     }
 }
