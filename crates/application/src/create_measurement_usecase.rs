@@ -3,19 +3,20 @@ use ports::{
     inbound::create_measurement_port::CreateMeasurementPort,
     outbound::measurement_port::MeasurementPort,
 };
+use std::sync::Arc;
 
 pub struct CreateMeasurementUsecase<M>
 where
     M: MeasurementPort,
 {
-    measurement_port: M,
+    measurement_port: Arc<M>,
 }
 
 impl<M> CreateMeasurementUsecase<M>
 where
     M: MeasurementPort,
 {
-    pub fn new(measurement_port: M) -> Self {
+    pub fn new(measurement_port: Arc<M>) -> Self {
         Self { measurement_port }
     }
 }

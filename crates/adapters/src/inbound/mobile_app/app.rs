@@ -1,7 +1,9 @@
 use crate::inbound::mobile_app::user_input_sanitizer::{
     sanitize_body_fat_input, sanitize_muscle_mass_input, sanitize_weight_input,
 };
-use ports::inbound::create_measurement_port::CreateMeasurementPort;
+use ports::inbound::{
+    create_measurement_port::CreateMeasurementPort, get_measurements_port::GetMeasurementsPort,
+};
 use slint::SharedString;
 use std::{error::Error, sync::Arc};
 
@@ -9,20 +11,24 @@ slint::include_modules!();
 
 // TODO: find a way to do this without introducing a static lifetime
 
-pub struct App<C>
+pub struct App<C, G>
 where
     C: CreateMeasurementPort + 'static,
+    G: GetMeasurementsPort + 'static,
 {
     create_measurement_port: Arc<C>,
+    _get_measurements_port: Arc<G>,
 }
 
-impl<C> App<C>
+impl<C, G> App<C, G>
 where
     C: CreateMeasurementPort + 'static,
+    G: GetMeasurementsPort + 'static,
 {
-    pub fn new(create_measurement_port: C) -> Self {
+    pub fn new(create_measurement_port: Arc<C>, get_measurements_port: Arc<G>) -> Self {
         Self {
-            create_measurement_port: Arc::new(create_measurement_port),
+            create_measurement_port,
+            _get_measurements_port: get_measurements_port,
         }
     }
 
@@ -59,8 +65,7 @@ where
             let port = Arc::clone(&port);
 
             let _ = slint::spawn_local(async move {
-                let creation_result = port.create(weight_kg, body_fat_pct, muscle_mass_pct).await;
-                println!("{:?}", creation_result);
+                let _ = port.create(weight_kg, body_fat_pct, muscle_mass_pct).await;
             });
         });
 
