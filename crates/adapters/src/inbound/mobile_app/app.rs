@@ -4,8 +4,8 @@ use crate::inbound::mobile_app::user_input_sanitizer::{
 use ports::inbound::{
     create_measurement_port::CreateMeasurementPort, get_measurements_port::GetMeasurementsPort,
 };
-use slint::SharedString;
-use std::{error::Error, sync::Arc};
+use slint::{ModelRc, SharedString, VecModel};
+use std::{error::Error, rc::Rc, sync::Arc};
 
 slint::include_modules!();
 
@@ -37,10 +37,34 @@ where
         let ui = AppWindow::new()?;
         self.register_callbacks(&ui);
         // TODO: remove debug code
+        let ui_w = ui.as_weak();
         let get_measurements_port = Arc::clone(&self.get_measurements_port);
+
         let _ = slint::spawn_local(async move {
-            let tst = get_measurements_port.get().await;
-            println!("{:?}", tst);
+            // TODO: clean this up
+            // let measurements = get_measurements_port.get().await.unwrap();
+            // let ui_measurment_rows = measurements
+            //     .iter()
+            //     .map(|x| MeasurementRow {
+            //         weight_kg: x.get_weight_kg(),
+            //         muscle_mass_pct: x.get_muscle_mass_pct().unwrap_or(0.0),
+            //         body_fat_pct: x.get_body_fat_pct().unwrap_or(0.0),
+            //     })
+            //     .collect::<Vec<MeasurementRow>>();
+            let mut ui_measurment_rows = vec![];
+            // TODO: rm debug code
+            for _i in 0..100 {
+                ui_measurment_rows.push(MeasurementRow {
+                    weight_kg: 0.0,
+                    muscle_mass_pct: 2.3,
+                    body_fat_pct: 3.5,
+                });
+            }
+            let _ = slint::invoke_from_event_loop(move || {
+                ui_w.upgrade()
+                    .unwrap()
+                    .set_measurements(ModelRc::from(Rc::new(VecModel::from(ui_measurment_rows))));
+            });
         });
         ui.run()?;
         Ok(())

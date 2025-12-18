@@ -1,77 +1,115 @@
-import { Button, VerticalBox, GroupBox, LineEdit } from "std-widgets.slint";
+import {
+    Button,
+    VerticalBox,
+    GroupBox,
+    LineEdit,
+    ListView,
+    ScrollView,
+} from "std-widgets.slint";
+
+export struct MeasurementRow {
+    weight_kg: float,
+    body_fat_pct: float,
+    muscle_mass_pct: float,
+}
 
 export component AppWindow inherits Window {
+    in-out property <[MeasurementRow]> measurements: [];
     callback compute-weight-input(string) -> string;
     callback compute-body-fat-input(string) -> string;
     callback compute-muscle-mass-input(string) -> string;
-
     callback submit(string, string, string);
 
-    VerticalLayout {
-        alignment: space-between;
-        padding: 30px;
+    ScrollView {
+        width: 100%;
+        height: 100%;
 
         VerticalLayout {
-            spacing: 30px;
+            alignment: space-between;
+            padding: 30px;
 
             VerticalLayout {
-                spacing: 10px;
+                spacing: 30px;
 
-                Text {
-                    text: "Weight";
+                VerticalLayout {
+                    spacing: 10px;
+
+                    Text {
+                        text: "Weight";
+                    }
+
+                    weight_input := LineEdit {
+                        horizontal-alignment: center;
+                        font-size: 16px;
+                        input-type: decimal;
+                        changed text => {
+                            let res = compute-weight-input(self.text);
+                            self.text = res;
+                        }
+                    }
                 }
 
-                weight_input := LineEdit {
-                    horizontal-alignment: center;
-                    font-size: 16px;
-                    input-type: decimal;
-                    changed text => {
-                        let res = compute-weight-input(self.text);
-                        self.text = res;
+                VerticalLayout {
+                    spacing: 10px;
+
+                    Text {
+                        text: "Body fat";
+                    }
+
+                    body_fat_input := LineEdit {
+                        horizontal-alignment: center;
+                        font-size: 16px;
+                        changed text => {
+                            let res = compute-body-fat-input(self.text);
+                            self.text = res;
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 10px;
+                    Text {
+                        text: "Muscle mass";
+                    }
+
+                    muscle_mass_input := LineEdit {
+                        horizontal-alignment: center;
+                        font-size: 16px;
+                        input-type: decimal;
+                        changed text => {
+                            let res = compute-muscle-mass-input(self.text);
+                            self.text = res;
+                        }
                     }
                 }
             }
 
-            VerticalLayout {
-                spacing: 10px;
-
-                Text {
-                    text: "Body fat";
-                }
-
-                body_fat_input := LineEdit {
-                    horizontal-alignment: center;
-                    font-size: 16px;
-                    changed text => {
-                        let res = compute-body-fat-input(self.text);
-                        self.text = res;
-                    }
+            Button {
+                text: "submit";
+                height: 60px;
+                clicked => {
+                    submit(weight_input.text,body_fat_input.text,muscle_mass_input.text);
                 }
             }
 
             VerticalLayout {
-                spacing: 10px;
-                Text {
-                    text: "Muscle mass";
-                }
+                for data in measurements: Rectangle {
+                    HorizontalLayout {
+                        alignment: space-between;
 
-                muscle_mass_input := LineEdit {
-                    horizontal-alignment: center;
-                    font-size: 16px;
-                    input-type: decimal;
-                    changed text => {
-                        let res = compute-muscle-mass-input(self.text);
-                        self.text = res;
+                        Text {
+                            text: data.weight_kg;
+                        }
+
+                        Text {
+                            text: data.body_fat_pct;
+                        }
+
+                        Text {
+                            text: data.muscle_mass_pct;
+                        }
                     }
                 }
-            }
-        }
-
-        Button {
-            text: "submit";
-            height: 60px;
-            clicked => {
-                submit(weight_input.text,body_fat_input.text,muscle_mass_input.text);
             }
         }
     }
